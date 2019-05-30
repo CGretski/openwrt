@@ -325,6 +325,18 @@ endif
 
 OPENSSL_TARGET:=linux-$(call qstrip,$(CONFIG_ARCH))-openwrt
 
+OPENSSL_OPTIONS += no-ssl2
+OPENSSL_OPTIONS += no-ssl3
+OPENSSL_OPTIONS += no-des
+OPENSSL_OPTIONS += no-gost
+OPENSSL_OPTIONS += no-tls1
+OPENSSL_OPTIONS += no-tls1_1
+OPENSSL_OPTIONS += no-rc2
+OPENSSL_OPTIONS += no-dh
+OPENSSL_OPTIONS += no-dsa
+OPENSSL_OPTIONS += no-rc4
+OPENSSL_OPTIONS += no-weak-ssl-ciphers
+
 STAMP_CONFIGURED := $(STAMP_CONFIGURED)_$(shell echo $(OPENSSL_OPTIONS) | mkhash md5)
 
 define Build/Configure
