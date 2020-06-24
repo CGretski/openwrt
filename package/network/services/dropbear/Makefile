@@ -107,15 +107,25 @@ CONFIGURE_ARGS += \
 # remove protocol idented software version number:
 # - LOCAL_IDENT
 # disable legacy/unsafe methods and unused functionality:
+# - INETD_MODE
 # - DROPBEAR_CLI_NETCAT
 # - DROPBEAR_DSS
 # - DO_MOTD
 DB_OPT_COMMON = \
 	DEFAULT_PATH|"$(TARGET_INIT_PATH)" \
 	!!LOCAL_IDENT|"SSH-2.0-dropbear" \
+	INETD_MODE|0 \
 	DROPBEAR_CLI_NETCAT|0 \
 	DROPBEAR_DSS|0 \
 	DO_MOTD|0 \
+	DROPBEAR_3DES|0\
+	DROPBEAR_ENABLE_CBC_MODE|0 \
+	DROPBEAR_SHA1_HMAC|0 \
+	DROPBEAR_DH_GROUP14_SHA256|0 \
+	DROPBEAR_DH_GROUP14_SHA1|0 \
+	DROPBEAR_DH_GROUP1|0 \
+	DROPBEAR_SHA1_96_HMAC|0 \
+	DROPBEAR_USE_PASSWORD_ENV|0
 
 
 ##############################################################################
@@ -144,25 +154,6 @@ DB_OPT_CONFIG = \
 
 TARGET_CFLAGS += -DARGTYPE=3 -ffunction-sections -fdata-sections -flto
 TARGET_LDFLAGS += -Wl,--gc-sections -flto=jobserver
-
-db_opt_add     =echo '\#define $(1) $(2)' >> $(PKG_BUILD_DIR)/localoptions.h
-db_opt_replace =$(ESED) 's,^(\#define $(1)) .*$$$$,\1 $(2),g' $(PKG_BUILD_DIR)/sysoptions.h
-
-define Build/Configure/dropbear_headers
-	$(strip $(foreach s,$(DB_OPT_COMMON), \
-	  $(if $(filter !!%,$(word 1,$(subst |, ,$(s)))), \
-	    $(call db_opt_replace,$(patsubst !!%,%,$(word 1,$(subst |, ,$(s)))),$(word 2,$(subst |, ,$(s)))), \
-	    $(call db_opt_add,$(word 1,$(subst |, ,$(s))),$(word 2,$(subst |, ,$(s)))) \
-	  ) ; \
-	))
-
-	$(strip $(foreach s,$(DB_OPT_CONFIG), \
-	  $(if $(filter !!%,$(word 1,$(subst |, ,$(s)))), \
-	    $(call db_opt_replace,$(patsubst !!%,%,$(word 1,$(subst |, ,$(s)))),$(if $($(word 2,$(subst |, ,$(s)))),$(word 3,$(subst |, ,$(s))),$(word 4,$(subst |, ,$(s))))), \
-	    $(call db_opt_add,$(word 1,$(subst |, ,$(s))),$(if $($(word 2,$(subst |, ,$(s)))),$(word 3,$(subst |, ,$(s))),$(word 4,$(subst |, ,$(s))))) \
-	  ) ; \
-	))
-endef
 
 define Build/Configure
 	: > $(PKG_BUILD_DIR)/localoptions.h
