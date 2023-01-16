@@ -1,8 +1,8 @@
 ARCH:=mips
 SUBTARGET:=xrx200
 BOARDNAME:=XRX200
-FEATURES+=nand ramdisk
-CPU_TYPE:=24kc
+FEATURES+=atm nand ramdisk source-only
+CPU_TYPE:=34kc
 
 DEFAULT_PACKAGES+=kmod-leds-gpio \
 	kmod-gpio-button-hotplug \
