@@ -34,7 +34,6 @@ HOST_CONFIGURE_ARGS := \
 	$(if $(MAKE_JOBSERVER),--parallel="$(MAKE_JOBSERVER)") \
 	--prefix="$(STAGING_DIR_HOST)" \
 	--system-expat \
-	--system-liblzma \
 	--system-zlib \
 	--system-zstd \
 	--generator=Ninja
